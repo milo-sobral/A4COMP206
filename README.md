@@ -1,4 +1,6 @@
 # Assignment4
 
-This repository holds the provided files to get you started coding Assignment 4. Please read the PDF document on My Courses for full instructions.
-
+## Info
+* Author : Milo Sobral
+* Date created : 04/04/2018
+* Date to submit : 13/04/2018
