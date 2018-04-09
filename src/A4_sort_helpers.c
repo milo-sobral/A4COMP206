@@ -45,7 +45,44 @@ void read_by_letter( char *filename, char first_letter ){
 
 // YOU COMPLETE THIS ENTIRE FUNCTION FOR Q1.
 void sort_words( ){
-    
+
+	int i, j, min_index;
+    char min_string[MAX_LINE_LENGTH];
+
+    //Go through unsorted array
+    for (i = 0; i < MAX_NUMBER_LINES - 1; i++) {
+
+        // Find the minimum element
+        int min_index = i;
+        strcpy(min_string, text_array[i]);
+        if (strcmp(min_string, "\0") == 0){
+        	return;
+        }
+
+        for (j = i + 1 ; j < MAX_NUMBER_LINES; j++) {
+
+        	if (strcmp(text_array[j], "\0") == 0){
+        		break;
+        	}
+
+        	// If min is greater
+            if (strcmp(min_string, text_array[j]) > 0) {
+                // Make text_array[j] as minimum string and update min_index
+                strcpy(min_string, text_array[j]);
+                min_index = j;
+            }
+         
+        }
+  
+        // Swap the found minimum element with the first element
+        if (min_index != i) {
+            char temp[MAX_LINE_LENGTH];
+            strcpy(temp, text_array[i]);
+            strcpy(text_array[i], text_array[min_index]);
+            strcpy(text_array[min_index], temp);
+        }
+
+    }
 }
 
 // YOU COMPLETE THIS ENTIRE FUNCTION FOR Q2.
