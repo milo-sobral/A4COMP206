@@ -1,5 +1,11 @@
 #include "A4_sort_helpers.h"
 
+sem_t* semaphores[27];
+char* sem_names[26] = {"first_letter", "second_letter", "third_letter", "fourth_letter", "fourth_letter", "fifth_letter", "sixth_letter", "seventh_letter", 
+			"eighth_letter", "ninth_letter", "tenth_letter", "eleventh_letter", "twelvth_letter", "thirteenth_letter", "fourteenth_letter", "fifteenth_letter", 
+			"sixteenth_letter", "seventeenth_letter", "eighteenth_letter", "nineteenth_letter", "twentith_letter", "twentifirst_letter", "twentisecond_letter", 
+			"twentithird_letter", "twentifourth_letter", "twentififth_letter", "twentisixth_letter" }
+
 // Function: read_all() 
 // Provided to read an entire file, line by line.
 // No need to change this one.
@@ -87,7 +93,15 @@ void sort_words( ){
 
 // YOU COMPLETE THIS ENTIRE FUNCTION FOR Q2.
 int initialize( ){
-    // Remove the current place-holder code, and write your own.
+    
+	for (int i = 0 ; i < 27 ; i++){
+		sem_unlink(sem_names[i]);
+		if (i == 0)
+			semaphores[i] = sem_open(sem_names[i], O_CREAT, 0666, 1);
+		else
+			semaphores[i] = sem_open(sem_names[i], O_CREAT, 0666, 0);
+	}
+
     sprintf(buf, "Initializing.\n"  );
     write(1, buf, strlen(buf));
     
@@ -99,12 +113,20 @@ int process_by_letter( char* input_filename, char first_letter ){
     // For Q2, keep the following 2 lines in your solution (maybe not at the start).
     // Add lines above or below to ensure the "This process will sort..." lines
     // are printed in the right order (alphabetical).
-    sprintf( buf, "This process will sort the letter %c.\n",  first_letter );
-    write(1,buf,strlen(buf));
+
+	sem_wait(semaphores[first_letter - 'a']);
+
+	sprintf( buf, "This process will sort the letter %c.\n",  first_letter );
+	write(1,buf,strlen(buf));  
+
+	read_by_letter( input_filename, first_letter );
+    sort_words( );
+	
+    sem_post(semaphores[first_letter - 'a' + 1]);
+
 
     // For Q3, uncomment the following 2 lines and integrate them with your overall solution.
-    // read_by_letter( input_filename, first_letter );
-    // sort_words( );
+    
 
     return 0;
 }
@@ -114,6 +136,8 @@ int finalize( ){
     // For Q2, keep the following 2 lines in your solution (maybe not at the start).
     // Add lines above or below to ensure the "Sorting complete!" line
     // is printed at the very end, after all letter lines.
+	sem_wait(semaphores[26]);
+
     sprintf( buf, "Sorting complete!\n" );
     write( 1, buf, strlen(buf) );
 
