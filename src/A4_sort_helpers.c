@@ -1,10 +1,10 @@
 #include "A4_sort_helpers.h"
 
 sem_t* semaphores[27];
-char* sem_names[26] = {"first_letter", "second_letter", "third_letter", "fourth_letter", "fourth_letter", "fifth_letter", "sixth_letter", "seventh_letter", 
+char* sem_names[27] = {"first_letter", "second_letter", "third_letter", "fourth_letter", "fourth_letter", "fifth_letter", "sixth_letter", "seventh_letter", 
 			"eighth_letter", "ninth_letter", "tenth_letter", "eleventh_letter", "twelvth_letter", "thirteenth_letter", "fourteenth_letter", "fifteenth_letter", 
 			"sixteenth_letter", "seventeenth_letter", "eighteenth_letter", "nineteenth_letter", "twentith_letter", "twentifirst_letter", "twentisecond_letter", 
-			"twentithird_letter", "twentifourth_letter", "twentififth_letter", "twentisixth_letter" }
+			"twentithird_letter", "twentifourth_letter", "twentififth_letter", "twentisixth_letter" };
 
 // Function: read_all() 
 // Provided to read an entire file, line by line.
@@ -102,8 +102,8 @@ int initialize( ){
 			semaphores[i] = sem_open(sem_names[i], O_CREAT, 0666, 0);
 	}
 
-    sprintf(buf, "Initializing.\n"  );
-    write(1, buf, strlen(buf));
+    // sprintf(buf, "Initializing.\n"  );
+    // write(1, buf, strlen(buf));
     
     return 0;
 }
@@ -116,15 +116,19 @@ int process_by_letter( char* input_filename, char first_letter ){
 
 	sem_wait(semaphores[first_letter - 'a']);
 
-	sprintf( buf, "This process will sort the letter %c.\n",  first_letter );
-	write(1,buf,strlen(buf));  
-
 	read_by_letter( input_filename, first_letter );
     sort_words( );
+
+	// sprintf( buf, "This process will sort the letter %c.\n",  first_letter );
+	// write(1,buf,strlen(buf));  
+
+    FILE* file = fopen("temp.txt","a");
+    for (int i = 0; text_array[i][0] != '\0'; i++){
+        fprintf(file, "%s", text_array[i]);
+    }
+    fclose(file);
 	
     sem_post(semaphores[first_letter - 'a' + 1]);
-
-
     // For Q3, uncomment the following 2 lines and integrate them with your overall solution.
     
 
@@ -137,6 +141,24 @@ int finalize( ){
     // Add lines above or below to ensure the "Sorting complete!" line
     // is printed at the very end, after all letter lines.
 	sem_wait(semaphores[26]);
+
+	FILE* file = fopen("temp.txt", "r");
+    if (file == NULL){
+		return -1;
+	}
+
+    char string[MAX_LINE_LENGTH];
+    //read the file and print it out
+    while(!feof(file)){
+      strcpy(string, "\0");
+      fgets(string, MAX_LINE_LENGTH, file);
+      sprintf(buf, "%s",string);
+      write(1,buf,strlen(buf));
+    }
+
+    fclose(file);
+    fopen("temp.txt", "w");
+    fclose(file);
 
     sprintf( buf, "Sorting complete!\n" );
     write( 1, buf, strlen(buf) );
