@@ -1,10 +1,10 @@
 #include "A4_sort_helpers.h"
 
 sem_t* semaphores[27];
-char* sem_names[27] = {"first_letter", "second_letter", "third_letter", "fourth_letter", "fourth_letter", "fifth_letter", "sixth_letter", "seventh_letter", 
+char* sem_names[27] = {"first_letter", "second_letter", "third_letter", "fourth_letter", "fifth_letter", "sixth_letter", "seventh_letter", 
 			"eighth_letter", "ninth_letter", "tenth_letter", "eleventh_letter", "twelvth_letter", "thirteenth_letter", "fourteenth_letter", "fifteenth_letter", 
 			"sixteenth_letter", "seventeenth_letter", "eighteenth_letter", "nineteenth_letter", "twentith_letter", "twentifirst_letter", "twentisecond_letter", 
-			"twentithird_letter", "twentifourth_letter", "twentififth_letter", "twentisixth_letter" };
+			"twentithird_letter", "twentifourth_letter", "twentififth_letter", "twentisixth_letter",  "last_semaphore",};
 
 // Function: read_all() 
 // Provided to read an entire file, line by line.
